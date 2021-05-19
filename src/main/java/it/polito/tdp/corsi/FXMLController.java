@@ -5,7 +5,12 @@
 package it.polito.tdp.corsi;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+
+import it.polito.tdp.corsi.db.CorsoDAO;
+import it.polito.tdp.corsi.model.Corso;
 import it.polito.tdp.corsi.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -45,12 +50,64 @@ public class FXMLController {
     private TextArea txtRisultato; // Value injected by FXMLLoader
 
     @FXML
-    void corsiPerPeriodo(ActionEvent event) {
+    void corsiPerPeriodo(ActionEvent event) throws Exception {
+    	//txtRisultato.clear();
     	
+    		txtRisultato.clear();
+	    	String periodoStringa = txtPeriodo.getText();
+	    	Integer p;
+	    		    	
+	    	try {
+		    	p = Integer.parseInt(periodoStringa);	
+	    	}catch (NumberFormatException ne) {
+	    		txtRisultato.setText("Devi inseire un numero (1 o 2) per il periodo didattico");
+	    		return;
+	    	}catch(NullPointerException ne) {
+	    		txtRisultato.setText("Devi inseire un numero (1 o 2) per il periodo didattico");
+	    		return;
+	    	}
+	    	
+	    	if (p <1 || p > 2) {
+	    		txtRisultato.setText("Devi inseire un numero (1 o 2) per il periodo didattico");
+	    		return;	    		
+	    	}
+	    	
+	    	List<Corso> corsi = this.model.getCorsiByPeriodo(p);
+	    	
+	    	for (Corso c : corsi) {
+				txtRisultato.appendText(c.toString());
+			} 
+    		
     }
 
     @FXML
     void numeroStudenti(ActionEvent event) {
+       	
+		txtRisultato.clear();
+    	String periodoStringa = txtPeriodo.getText();
+    	Integer p;
+    		    	
+    	try {
+	    	p = Integer.parseInt(periodoStringa);	
+    	}catch (NumberFormatException ne) {
+    		txtRisultato.setText("Devi inseire un numero (1 o 2) per il periodo didattico");
+    		return;
+    	}catch(NullPointerException ne) {
+    		txtRisultato.setText("Devi inseire un numero (1 o 2) per il periodo didattico");
+    		return;
+    	}
+    	
+    	if (p <1 || p > 2) {
+    		txtRisultato.setText("Devi inseire un numero (1 o 2) per il periodo didattico");
+    		return;	    		
+    	}
+    	
+    	Map<Corso, Integer> corsiiscrizioni = this.model.getIscrittiByPeriodo(p);
+    	
+    	for (Corso c : corsiiscrizioni.keySet()) {
+    		txtRisultato.appendText(c.toString() + " " + corsiiscrizioni.get(c).toString() +"\n");
+    	}
+    	
     	
     }
 
